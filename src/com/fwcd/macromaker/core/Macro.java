@@ -71,7 +71,6 @@ public class Macro {
 			@Override
 			public void nativeMousePressed(NativeMouseEvent nativeEvent) {
 				final int buttonCombo = InputEvent.getMaskForButton(nativeEvent.getButton());
-				for (int i=0; i<1000; i++) System.out.println(buttonCombo);
 				final long millis = watch.getMillis();
 				actions.put(millis, () -> robot.mousePress(buttonCombo));
 			}
