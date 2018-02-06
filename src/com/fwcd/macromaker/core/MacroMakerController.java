@@ -7,40 +7,40 @@ import com.fwcd.fructose.swing.Viewable;
 public class MacroMakerController implements Viewable {
 	private final MacroMakerView view;
 	
-	private Macro currentMakro = null;
-	private Thread makroRunner = null;
+	private Macro currentMacro = null;
+	private Thread macroRunner = null;
 	
 	public MacroMakerController() {
 		view = new MacroMakerView(this);
 	}
 
 	public void record() {
-		currentMakro = new Macro();
-		currentMakro.startRecording();
+		currentMacro = new Macro();
+		currentMacro.startRecording();
 		view.setStatus("Recording...");
 	}
 	
 	public void stop() {
-		if (makroRunner != null && makroRunner.isAlive()) {
-			makroRunner.interrupt();
-		} else if (currentMakro != null) {
-			currentMakro.stopRecording();
+		if (macroRunner != null && macroRunner.isAlive()) {
+			macroRunner.interrupt();
+		} else if (currentMacro != null) {
+			currentMacro.stopRecording();
 			view.setStatus("Idling...");
 		}
 	}
 	
 	public void play() {
-		if (currentMakro == null) {
-			view.showMessage("No makro recorded.");
+		if (currentMacro == null) {
+			view.showMessage("No macro recorded.");
 		} else {
 			view.setStatus("Playing...");
 			final int repeats = view.getRepeats();
 			
-			makroRunner = new Thread(() -> {
+			macroRunner = new Thread(() -> {
 				int i = 0;
 				while (i < repeats && !Thread.interrupted()) {
 					try {
-						currentMakro.play(view::updateProgress);
+						currentMacro.play(view::updateProgress);
 						i++;
 					} catch (InterruptedException e) {
 						break;
@@ -48,7 +48,7 @@ public class MacroMakerController implements Viewable {
 				}
 				view.setStatus("Idling...");
 			});
-			makroRunner.start();
+			macroRunner.start();
 		}
 	}
 	
