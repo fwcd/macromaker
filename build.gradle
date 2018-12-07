@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+mainClassName = 'fwcd.macromaker.MacroMakerMain'
+
+repositories {
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.fwcd:Fructose:b12e36618dc3d386cde73b25efe45723f88eb859'
+    implementation 'com.1stleg:jnativehook:2.1.0'
+}
