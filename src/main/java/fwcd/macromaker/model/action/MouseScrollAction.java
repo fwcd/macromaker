@@ -1,8 +1,11 @@
 package fwcd.macromaker.model.action;
 
+import com.google.gson.annotations.SerializedName;
+
 import fwcd.macromaker.model.RobotProxy;
 
 public class MouseScrollAction implements MacroAction {
+	@SerializedName("mwd")
 	private int mouseWheelDelta;
 	
 	/** Deserialization constructor. */
