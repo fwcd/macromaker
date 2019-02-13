@@ -5,15 +5,15 @@ import fwcd.macromaker.model.RobotProxy;
 /**
  * An delayed macro action.
  */
-public class TimedMacroAction implements MacroAction {
+public class TimedAction implements MacroAction {
 	private MacroAction action;
 	private long delayMs;
 
 	/** Deserialization constructor. */
-	protected TimedMacroAction() {
+	protected TimedAction() {
 	}
 
-	public TimedMacroAction(MacroAction action, long delayMs) {
+	public TimedAction(MacroAction action, long delayMs) {
 		this.action = action;
 		this.delayMs = delayMs;
 	}
@@ -21,7 +21,8 @@ public class TimedMacroAction implements MacroAction {
 	public MacroAction getAction() {
 		return action;
 	}
-
+	
+	@Override
 	public long getDelayMs() {
 		return delayMs;
 	}

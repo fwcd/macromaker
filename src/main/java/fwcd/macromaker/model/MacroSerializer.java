@@ -13,6 +13,7 @@ import fwcd.macromaker.model.action.MouseMoveAction;
 import fwcd.macromaker.model.action.MousePressAction;
 import fwcd.macromaker.model.action.MouseReleaseAction;
 import fwcd.macromaker.model.action.MouseScrollAction;
+import fwcd.macromaker.model.action.TimedAction;
 
 /**
  * Serializes and deserializes macros.
@@ -28,6 +29,7 @@ public class MacroSerializer {
 		taf.registerSubtype(MousePressAction.class, "mp");
 		taf.registerSubtype(MouseReleaseAction.class, "mr");
 		taf.registerSubtype(MouseScrollAction.class, "ms");
+		taf.registerSubtype(TimedAction.class, "t");
 		gson = new GsonBuilder()
 			.registerTypeAdapterFactory(taf)
 			.create();

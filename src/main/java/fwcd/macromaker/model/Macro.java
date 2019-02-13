@@ -5,7 +5,7 @@ import java.util.List;
 import fwcd.macromaker.model.action.MacroAction;
 
 /**
- * A runnable sequence of mouse/key actions.
+ * A sequence of mouse/key actions.
  */
 public class Macro {
 	private List<MacroAction> actions;
@@ -17,9 +17,11 @@ public class Macro {
 		this.actions = actions;
 	}
 	
-	public void run(RobotProxy robot) {
-		for (MacroAction action : actions) {
-			action.run(robot);
-		}
+	public long getDurationMs() {
+		return actions.stream()
+			.mapToLong(MacroAction::getDelayMs)
+			.sum();
 	}
+	
+	public List<MacroAction> getActions() { return actions; }
 }

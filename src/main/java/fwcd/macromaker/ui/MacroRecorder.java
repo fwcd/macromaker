@@ -1,12 +1,9 @@
 package fwcd.macromaker.ui;
 
-import java.awt.AWTException;
-import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.DoubleConsumer;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -23,6 +20,14 @@ import org.jnativehook.mouse.NativeMouseWheelListener;
 
 import fwcd.fructose.exception.Rethrow;
 import fwcd.fructose.time.Stopwatch;
+import fwcd.macromaker.model.Macro;
+import fwcd.macromaker.model.action.KeyPressAction;
+import fwcd.macromaker.model.action.MacroAction;
+import fwcd.macromaker.model.action.MouseMoveAction;
+import fwcd.macromaker.model.action.MousePressAction;
+import fwcd.macromaker.model.action.MouseReleaseAction;
+import fwcd.macromaker.model.action.MouseScrollAction;
+import fwcd.macromaker.model.action.TimedAction;
 
 /**
  * A facility to record macros using native listeners.
@@ -33,17 +38,11 @@ public class MacroRecorder {
 	private final NativeMouseMotionListener mouseMotionListener;
 	private final NativeMouseWheelListener mouseWheelListener;
 	
-	private final Map<Long, Runnable> actions = new LinkedHashMap<>();
-	private final Robot robot;
+	private final List<MacroAction> actions = new ArrayList<>();
 	private final Stopwatch watch = new Stopwatch();
 	private long durationMs = 0;
 	
 	public MacroRecorder() {
-		try {
-			robot = new Robot();
-		} catch (AWTException e) {
-			throw new Rethrow(e);
-		}
 		keyListener = new SwingKeyAdapter() {
 			private static final long serialVersionUID = 1L;
 			
@@ -51,63 +50,68 @@ public class MacroRecorder {
 			public void keyPressed(KeyEvent event) {
 				final int awtKeyCode = event.getKeyCode();
 				final long millis = watch.getMillis();
-				actions.put(millis, () -> robot.keyPress(awtKeyCode));
+				addAction(new KeyPressAction(awtKeyCode), millis);
+				watch.start();
 			}
 
 			@Override
 			public void keyReleased(KeyEvent event) {
 				final int awtKeyCode = event.getKeyCode();
 				final long millis = watch.getMillis();
-				actions.put(millis, () -> robot.keyRelease(awtKeyCode));
+				addAction(new KeyPressAction(awtKeyCode), millis);
+				watch.start();
 			}
-			
 		};
 		mouseListener = new NativeMouseAdapter() {
-			
 			@Override
 			public void nativeMouseReleased(NativeMouseEvent nativeEvent) {
 				final int buttonCombo = InputEvent.getMaskForButton(nativeEvent.getButton());
 				final long millis = watch.getMillis();
-				actions.put(millis, () -> robot.mouseRelease(buttonCombo));
+				addAction(new MouseReleaseAction(buttonCombo), millis);
+				watch.start();
 			}
 			
 			@Override
 			public void nativeMousePressed(NativeMouseEvent nativeEvent) {
 				final int buttonCombo = InputEvent.getMaskForButton(nativeEvent.getButton());
 				final long millis = watch.getMillis();
-				actions.put(millis, () -> robot.mousePress(buttonCombo));
+				addAction(new MousePressAction(buttonCombo), millis);
+				watch.start();
 			}
-			
 		};
 		mouseMotionListener = new NativeMouseMotionAdapter() {
-
 			@Override
 			public void nativeMouseMoved(NativeMouseEvent nativeEvent) {
 				final int x = nativeEvent.getX();
 				final int y = nativeEvent.getY();
 				final long millis = watch.getMillis();
-				actions.put(millis, () -> robot.mouseMove(x, y));
+				addAction(new MouseMoveAction(x, y), millis);
+				watch.start();
 			}
 
 			@Override
 			public void nativeMouseDragged(NativeMouseEvent nativeEvent) {
-				final int x = nativeEvent.getX();
-				final int y = nativeEvent.getY();
-				final long millis = watch.getMillis();
-				actions.put(millis, () -> robot.mouseMove(x, y));
+				nativeMouseMoved(nativeEvent);
 			}
-			
 		};
 		mouseWheelListener = new NativeMouseWheelAdapter() {
-
 			@Override
 			public void nativeMouseWheelMoved(NativeMouseWheelEvent nativeEvent) {
 				final int mouseWheelDelta = nativeEvent.getScrollAmount();
 				final long millis = watch.getMillis();
-				actions.put(millis, () -> robot.mouseWheel(mouseWheelDelta));
+				addAction(new MouseScrollAction(mouseWheelDelta), millis);
+				watch.start();
 			}
-			
 		};
+	}
+	
+	public void reset() {
+		watch.stop();
+		actions.clear();
+	}
+	
+	private void addAction(MacroAction action, long delayMs) {
+		actions.add(new TimedAction(action, delayMs));
 	}
 	
 	public void startRecording() {
@@ -139,18 +143,7 @@ public class MacroRecorder {
 		}
 	}
 	
-	public void play(DoubleConsumer progressView) throws InterruptedException {
-		double elapsedPercent = 0;
-		long elapsed = 0;
-		
-		for (long timeStamp : actions.keySet()) {
-			Runnable action = actions.get(timeStamp);
-			Thread.sleep(timeStamp - elapsed);
-			action.run();
-			
-			elapsed = timeStamp;
-			elapsedPercent = elapsed / (double) durationMs;
-			progressView.accept(elapsedPercent);
-		}
+	public Macro getRecordedMacro() {
+		return new Macro(actions);
 	}
 }
