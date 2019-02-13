@@ -1,11 +1,11 @@
 package fwcd.macromaker.ui;
 
-import fwcd.macromaker.model.Macro;
+import fwcd.macromaker.model.MacroRecorder;
 
 public class MacroMakerViewController implements MacroMakerResponder {
 	private final MacroMakerView view;
 	
-	private Macro currentMacro = null;
+	private MacroRecorder currentMacro = null;
 	private Thread macroRunner = null;
 	
 	public MacroMakerViewController() {
@@ -14,7 +14,7 @@ public class MacroMakerViewController implements MacroMakerResponder {
 	
 	@Override
 	public void record() {
-		currentMacro = new Macro();
+		currentMacro = new MacroRecorder();
 		currentMacro.startRecording();
 		view.setStatus("Recording...");
 	}
