@@ -1,5 +1,6 @@
 package fwcd.macromaker.model;
 
+import java.util.Comparator;
 import java.util.List;
 
 import fwcd.macromaker.model.action.MacroAction;
@@ -14,6 +15,7 @@ public class Macro {
 	protected Macro() {}
 	
 	public Macro(List<MacroAction> actions) {
+		actions.sort(Comparator.comparing(MacroAction::getTimeStamp));
 		this.actions = actions;
 	}
 	
