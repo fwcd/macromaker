@@ -40,7 +40,6 @@ public class MacroRecorder {
 	
 	private final List<MacroAction> actions = new ArrayList<>();
 	private final Stopwatch watch = new Stopwatch();
-	private long durationMs = 0;
 	
 	public MacroRecorder() {
 		keyListener = new SwingKeyAdapter() {
@@ -128,9 +127,6 @@ public class MacroRecorder {
 	}
 	
 	public void stopRecording() {
-		if (watch.isRunning()) {
-			durationMs = watch.getMillis();
-		}
 		watch.stop();
 		GlobalScreen.removeNativeKeyListener(keyListener);
 		GlobalScreen.removeNativeMouseListener(mouseListener);
