@@ -2,13 +2,13 @@ package fwcd.macromaker.model.action;
 
 import fwcd.macromaker.model.RobotProxy;
 
-public class MacroKeyPressAction implements MacroAction {
+public class KeyPressAction implements MacroAction {
 	private int keyCode;
 	
 	/** Deserialization constructor. */
-	protected MacroKeyPressAction() {}
+	protected KeyPressAction() {}
 	
-	public MacroKeyPressAction(int keyCode) {
+	public KeyPressAction(int keyCode) {
 		this.keyCode = keyCode;
 	}
 	
