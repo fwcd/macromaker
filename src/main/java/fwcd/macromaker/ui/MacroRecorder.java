@@ -22,6 +22,7 @@ import fwcd.fructose.exception.Rethrow;
 import fwcd.fructose.time.Stopwatch;
 import fwcd.macromaker.model.Macro;
 import fwcd.macromaker.model.action.KeyPressAction;
+import fwcd.macromaker.model.action.KeyReleaseAction;
 import fwcd.macromaker.model.action.MacroAction;
 import fwcd.macromaker.model.action.MouseMoveAction;
 import fwcd.macromaker.model.action.MousePressAction;
@@ -56,7 +57,7 @@ public class MacroRecorder {
 			public void keyReleased(KeyEvent event) {
 				final int awtKeyCode = event.getKeyCode();
 				final long millis = watch.getMillis();
-				addAction(new KeyPressAction(awtKeyCode), millis);
+				addAction(new KeyReleaseAction(awtKeyCode), millis);
 			}
 		};
 		mouseListener = new NativeMouseAdapter() {

@@ -2,6 +2,7 @@ package fwcd.macromaker.ui;
 
 import java.awt.AWTException;
 import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,37 +27,61 @@ public class AwtRobotProxy implements RobotProxy {
 	
 	@Override
 	public void pressKey(int keyCode) {
-		LOG.debug("Pressed key {}", keyCode);
-		robot.keyPress(keyCode);
+		LOG.debug("Pressed key {}", KeyEvent.getKeyText(keyCode));
+		try {
+			robot.keyPress(keyCode);
+		} catch (IllegalArgumentException e) {
+			LOG.error("Error while pressing key " + KeyEvent.getKeyText(keyCode), e);
+		}
 	}
 	
 	@Override
 	public void releaseKey(int keyCode) {
-		LOG.debug("Released key {}", keyCode);
-		robot.keyRelease(keyCode);
+		LOG.debug("Released key {}", KeyEvent.getKeyText(keyCode));
+		try {
+			robot.keyRelease(keyCode);
+		} catch (IllegalArgumentException e) {
+			LOG.error("Error while releasing key " + KeyEvent.getKeyText(keyCode), e);
+		}
 	}
 	
 	@Override
 	public void moveMouse(int x, int y) {
 		LOG.debug("Moved mouse to x = {}, y = {}", x, y);
-		robot.mouseMove(x, y);
+		try {
+			robot.mouseMove(x, y);
+		} catch (IllegalArgumentException e) {
+			LOG.error("Error while moving mouse to x = " + x + ", y = " + y, e);
+		}
 	}
 	
 	@Override
 	public void pressMouse(int buttons) {
 		LOG.debug("Pressed mouse with button mask {}", buttons);
-		robot.mousePress(buttons);
+		try {
+			robot.mousePress(buttons);
+		} catch (IllegalArgumentException e) {
+			LOG.error("Error while pressing mouse with button mask " + buttons, e);
+		}
 	}
 	
 	@Override
 	public void releaseMouse(int buttons) {
 		LOG.debug("Released mouse with button mask {}", buttons);
-		robot.mouseRelease(buttons);
+		try {
+			robot.mouseRelease(buttons);
+		} catch (IllegalArgumentException e) {
+			LOG.error("Error while releasing mouse with button mask " + buttons, e);
+		}
 	}
 	
 	@Override
 	public void scroll(int mouseWheelDelta) {
 		LOG.debug("Scrolled by {}", mouseWheelDelta);
-		robot.mouseWheel(mouseWheelDelta);
+		try {
+			robot.mouseWheel(mouseWheelDelta);
+		} catch (IllegalArgumentException e) {
+			LOG.error("Error while scrolling by " + mouseWheelDelta, e);
+		}
 	}
 }
