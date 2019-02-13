@@ -5,7 +5,7 @@ import java.util.List;
 import fwcd.macromaker.model.action.MacroAction;
 
 /**
- * A sequence of mouse/key actions.
+ * A sequence of mouse/key actions in their chronological order.
  */
 public class Macro {
 	private List<MacroAction> actions;
@@ -18,9 +18,11 @@ public class Macro {
 	}
 	
 	public long getDurationMs() {
-		return actions.stream()
-			.mapToLong(MacroAction::getDelayMs)
-			.sum();
+		if (actions.size() == 0) {
+			return 0L;
+		} else {
+			return actions.get(actions.size() - 1).getTimeStamp();
+		}
 	}
 	
 	public List<MacroAction> getActions() { return actions; }

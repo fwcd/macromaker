@@ -50,7 +50,6 @@ public class MacroRecorder {
 				final int awtKeyCode = event.getKeyCode();
 				final long millis = watch.getMillis();
 				addAction(new KeyPressAction(awtKeyCode), millis);
-				watch.start();
 			}
 
 			@Override
@@ -58,7 +57,6 @@ public class MacroRecorder {
 				final int awtKeyCode = event.getKeyCode();
 				final long millis = watch.getMillis();
 				addAction(new KeyPressAction(awtKeyCode), millis);
-				watch.start();
 			}
 		};
 		mouseListener = new NativeMouseAdapter() {
@@ -67,7 +65,6 @@ public class MacroRecorder {
 				final int buttonCombo = InputEvent.getMaskForButton(nativeEvent.getButton());
 				final long millis = watch.getMillis();
 				addAction(new MouseReleaseAction(buttonCombo), millis);
-				watch.start();
 			}
 			
 			@Override
@@ -75,7 +72,6 @@ public class MacroRecorder {
 				final int buttonCombo = InputEvent.getMaskForButton(nativeEvent.getButton());
 				final long millis = watch.getMillis();
 				addAction(new MousePressAction(buttonCombo), millis);
-				watch.start();
 			}
 		};
 		mouseMotionListener = new NativeMouseMotionAdapter() {
@@ -85,7 +81,6 @@ public class MacroRecorder {
 				final int y = nativeEvent.getY();
 				final long millis = watch.getMillis();
 				addAction(new MouseMoveAction(x, y), millis);
-				watch.start();
 			}
 
 			@Override
@@ -99,7 +94,6 @@ public class MacroRecorder {
 				final int mouseWheelDelta = nativeEvent.getScrollAmount();
 				final long millis = watch.getMillis();
 				addAction(new MouseScrollAction(mouseWheelDelta), millis);
-				watch.start();
 			}
 		};
 	}
@@ -109,8 +103,8 @@ public class MacroRecorder {
 		actions.clear();
 	}
 	
-	private void addAction(MacroAction action, long delayMs) {
-		actions.add(new TimedAction(action, delayMs));
+	private void addAction(MacroAction action, long timeStamp) {
+		actions.add(new TimedAction(action, timeStamp));
 	}
 	
 	public void startRecording() {

@@ -1,21 +1,24 @@
 package fwcd.macromaker.model.action;
 
+import com.google.gson.annotations.SerializedName;
+
 import fwcd.macromaker.model.RobotProxy;
 
 /**
- * An delayed macro action.
+ * An macro action decorator featuring a time stamp.
  */
 public class TimedAction implements MacroAction {
+	@SerializedName("a")
 	private MacroAction action;
-	private long delayMs;
+	@SerializedName("ts")
+	private long timeStamp;
 
 	/** Deserialization constructor. */
-	protected TimedAction() {
-	}
+	protected TimedAction() {}
 
-	public TimedAction(MacroAction action, long delayMs) {
+	public TimedAction(MacroAction action, long timeStamp) {
 		this.action = action;
-		this.delayMs = delayMs;
+		this.timeStamp = timeStamp;
 	}
 
 	public MacroAction getAction() {
@@ -23,17 +26,12 @@ public class TimedAction implements MacroAction {
 	}
 	
 	@Override
-	public long getDelayMs() {
-		return delayMs;
+	public long getTimeStamp() {
+		return timeStamp;
 	}
 
 	@Override
 	public void run(RobotProxy robot) {
-		try {
-			Thread.sleep(delayMs);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		action.run(robot);
 	}
 }

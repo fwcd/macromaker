@@ -68,8 +68,12 @@ public class MacroMakerViewController implements MacroMakerResponder {
 		long elapsed = 0;
 		
 		for (MacroAction action : macro.getActions()) {
+			long timeStamp = action.getTimeStamp();
+			Thread.sleep(timeStamp - elapsed);
+			
 			action.run(robot);
-			elapsed += action.getDelayMs();
+			
+			elapsed = timeStamp;
 			elapsedPercent = elapsed / duration;
 			view.updateProgress(elapsedPercent);
 		}
