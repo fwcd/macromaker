@@ -33,7 +33,7 @@ import fwcd.macromaker.model.action.TimedAction;
 /**
  * A facility to record macros using native listeners.
  */
-public class MacroRecorder {
+public class MacroRecorder implements AutoCloseable {
 	private final NativeKeyListener keyListener;
 	private final NativeMouseListener mouseListener;
 	private final NativeMouseMotionListener mouseMotionListener;
@@ -132,6 +132,11 @@ public class MacroRecorder {
 		} catch (NativeHookException e) {
 			throw new Rethrow(e);
 		}
+	}
+	
+	@Override
+	public void close() {
+		stopRecording();
 	}
 	
 	public Macro getRecordedMacro() {

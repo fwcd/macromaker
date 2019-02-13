@@ -11,7 +11,7 @@ import fwcd.macromaker.model.MacroSerializer;
 import fwcd.macromaker.model.RobotProxy;
 import fwcd.macromaker.model.action.MacroAction;
 
-public class MacroMakerViewController implements MacroMakerResponder {
+public class MacroMakerViewController implements MacroMakerResponder, AutoCloseable {
 	private final MacroMakerView view;
 	
 	private RobotProxy robot = new AwtRobotProxy();
@@ -116,5 +116,10 @@ public class MacroMakerViewController implements MacroMakerResponder {
 	
 	public MacroMakerView getView() {
 		return view;
+	}
+	
+	@Override
+	public void close() {
+		recorder.close();
 	}
 }

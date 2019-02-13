@@ -29,6 +29,9 @@ public class MacroMakerMain {
 		frame.revalidate();
 		frame.setAlwaysOnTop(true);
 		
+		// Ensure that native resources are closed when the JVM terminates
+		Runtime.getRuntime().addShutdownHook(new Thread(vc::close));
+		
 		LOG.info("Launched application in {} ms", watch.stop());
 	}
 }
