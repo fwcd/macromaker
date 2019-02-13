@@ -1,7 +1,5 @@
 package fwcd.macromaker.ui;
 
-import fwcd.macromaker.model.MacroRecorder;
-
 public class MacroMakerViewController implements MacroMakerResponder {
 	private final MacroMakerView view;
 	

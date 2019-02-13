@@ -10,4 +10,6 @@ public class Macro {
 	
 	/** Deserialization constructor. */
 	protected Macro() {}
+	
+	public List<MacroAction> getActions() { return actions; }
 }

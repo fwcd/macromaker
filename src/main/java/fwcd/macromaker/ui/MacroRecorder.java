@@ -1,4 +1,4 @@
-package fwcd.macromaker.model;
+package fwcd.macromaker.ui;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -24,6 +24,9 @@ import org.jnativehook.mouse.NativeMouseWheelListener;
 import fwcd.fructose.exception.Rethrow;
 import fwcd.fructose.time.Stopwatch;
 
+/**
+ * A facility to record macros using native listeners.
+ */
 public class MacroRecorder {
 	private final NativeKeyListener keyListener;
 	private final NativeMouseListener mouseListener;
