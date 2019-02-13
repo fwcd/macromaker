@@ -13,6 +13,7 @@ public class MacroMakerMain {
 	private static final Logger LOG = LoggerFactory.getLogger(MacroMakerMain.class);
 	
 	public static void main(String[] args) {
+		// Reroute JNativeHook loggers to SLF4J at the fine -> debug level
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 		
