@@ -1,6 +1,13 @@
 package fwcd.macromaker.ui;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import fwcd.macromaker.model.Macro;
+import fwcd.macromaker.model.MacroSerializer;
 import fwcd.macromaker.model.RobotProxy;
 import fwcd.macromaker.model.action.MacroAction;
 
@@ -9,6 +16,7 @@ public class MacroMakerViewController implements MacroMakerResponder {
 	
 	private RobotProxy robot = new AwtRobotProxy();
 	private MacroRecorder recorder = new MacroRecorder();
+	private MacroSerializer serializer = new MacroSerializer();
 	private Macro macro = null;
 	private Thread macroRunner = null;
 	
@@ -76,6 +84,33 @@ public class MacroMakerViewController implements MacroMakerResponder {
 			elapsed = timeStamp;
 			elapsedPercent = elapsed / duration;
 			view.updateProgress(elapsedPercent);
+		}
+	}
+	
+	@Override
+	public void newMacro() {
+		macro = null;
+	}
+	
+	@Override
+	public void open(Path path) {
+		try (BufferedReader reader = Files.newBufferedReader(path)) {
+			macro = serializer.deserialize(reader);
+		} catch (IOException e) {
+			view.showMessage("Could not open file: " + e.getMessage());
+		}
+	}
+	
+	@Override
+	public void save(Path path) {
+		if (macro == null) {
+			view.showMessage("No macro recorded.");
+		} else {
+			try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+				serializer.serialize(macro, writer);
+			} catch (IOException e) {
+				view.showMessage("Could not save to file: " + e.getMessage());
+			}
 		}
 	}
 	

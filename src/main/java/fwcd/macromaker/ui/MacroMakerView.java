@@ -20,7 +20,7 @@ import fwcd.fructose.swing.SizedLabel;
 import fwcd.fructose.swing.View;
 
 public class MacroMakerView implements View {
-	private final JComponent view;
+	private final JComponent component;
 	
 	private final JButton recordButton;
 	private final JButton stopButton;
@@ -30,8 +30,8 @@ public class MacroMakerView implements View {
 	private final JSpinner repeatsSpinner;
 	
 	public MacroMakerView(MacroMakerResponder responder) {
-		view = new JPanel();
-		view.setLayout(new BorderLayout());
+		component = new JPanel();
+		component.setLayout(new BorderLayout());
 		
 		JPanel toolBar = new JPanel();
 		
@@ -56,16 +56,16 @@ public class MacroMakerView implements View {
 		toolBar.add(repeatsSpinner);
 		toolBar.add(new JLabel("Repeats"));
 		
-		view.add(toolBar, BorderLayout.NORTH);
+		component.add(toolBar, BorderLayout.NORTH);
 		
 		statusLabel = new SizedLabel("Idling...", 18);
 		statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		view.add(statusLabel, BorderLayout.CENTER);
+		component.add(statusLabel, BorderLayout.CENTER);
 		
 		progressBar = new JProgressBar(0, 100);
-		view.add(progressBar, BorderLayout.SOUTH);
+		component.add(progressBar, BorderLayout.SOUTH);
 	}
-
+	
 	public void updateProgress(double progress) {
 		progressBar.setValue((int) (progress * 100));
 		progressBar.repaint();
@@ -73,7 +73,7 @@ public class MacroMakerView implements View {
 	
 	@Override
 	public JComponent getComponent() {
-		return view;
+		return component;
 	}
 
 	public int getRepeats() {
@@ -85,6 +85,6 @@ public class MacroMakerView implements View {
 	}
 
 	public void showMessage(String message) {
-		JOptionPane.showMessageDialog(view, message);
+		JOptionPane.showMessageDialog(component, message);
 	}
 }
