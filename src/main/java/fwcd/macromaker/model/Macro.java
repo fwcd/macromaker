@@ -1,15 +1,25 @@
 package fwcd.macromaker.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fwcd.macromaker.model.action.MacroAction;
 
+/**
+ * A runnable sequence of mouse/key actions.
+ */
 public class Macro {
-	private List<MacroAction> actions = new ArrayList<>();
+	private List<MacroAction> actions;
 	
 	/** Deserialization constructor. */
 	protected Macro() {}
 	
-	public List<MacroAction> getActions() { return actions; }
+	public Macro(List<MacroAction> actions) {
+		this.actions = actions;
+	}
+	
+	public void run(RobotProxy robot) {
+		for (MacroAction action : actions) {
+			action.run(robot);
+		}
+	}
 }
