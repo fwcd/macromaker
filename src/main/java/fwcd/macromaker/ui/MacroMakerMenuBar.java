@@ -1,6 +1,7 @@
 package fwcd.macromaker.ui;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -37,7 +38,14 @@ public class MacroMakerMenuBar implements View {
 		if (fileChooser.showSaveDialog(component) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			if (file != null) {
-				responder.save(file.toPath());
+				String fileName = file.getName();
+				Path path;
+				if (fileName.endsWith(".json")) {
+					path = file.toPath();
+				} else {
+					path = file.getParentFile().toPath().resolve(fileName + ".json");
+				}
+				responder.save(path);
 			}
 		}
 	}
