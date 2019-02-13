@@ -29,7 +29,7 @@ public class MacroMakerView implements View {
 	private final JProgressBar progressBar;
 	private final JSpinner repeatsSpinner;
 	
-	public MacroMakerView(MacroMakerController controller) {
+	public MacroMakerView(MacroMakerResponder responder) {
 		view = new JPanel();
 		view.setLayout(new BorderLayout());
 		
@@ -39,15 +39,15 @@ public class MacroMakerView implements View {
 			g2d.setColor(Color.RED);
 			g2d.fillOval(5, 5, 15, 15);
 		});
-		recordButton.addActionListener(l -> controller.record());
+		recordButton.addActionListener(l -> responder.record());
 		toolBar.add(recordButton);
 		
 		stopButton = new JButton("Stop");
-		stopButton.addActionListener(l -> controller.stop());
+		stopButton.addActionListener(l -> responder.stop());
 		toolBar.add(stopButton);
 		
 		playButton = new JButton("Play");
-		playButton.addActionListener(l -> controller.play());
+		playButton.addActionListener(l -> responder.play());
 		toolBar.add(playButton);
 		
 		SpinnerModel repeatsSpinnerModel = new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1);

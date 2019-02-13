@@ -1,25 +1,23 @@
 package fwcd.macromaker.core;
 
-import javax.swing.JComponent;
-
-import fwcd.fructose.swing.View;
-
-public class MacroMakerController implements View {
+public class MacroMakerViewController implements MacroMakerResponder {
 	private final MacroMakerView view;
 	
 	private Macro currentMacro = null;
 	private Thread macroRunner = null;
 	
-	public MacroMakerController() {
+	public MacroMakerViewController() {
 		view = new MacroMakerView(this);
 	}
-
+	
+	@Override
 	public void record() {
 		currentMacro = new Macro();
 		currentMacro.startRecording();
 		view.setStatus("Recording...");
 	}
 	
+	@Override
 	public void stop() {
 		if (macroRunner != null && macroRunner.isAlive()) {
 			macroRunner.interrupt();
@@ -29,6 +27,7 @@ public class MacroMakerController implements View {
 		}
 	}
 	
+	@Override
 	public void play() {
 		if (currentMacro == null) {
 			view.showMessage("No macro recorded.");
@@ -52,8 +51,7 @@ public class MacroMakerController implements View {
 		}
 	}
 	
-	@Override
-	public JComponent getComponent() {
-		return view.getComponent();
+	public MacroMakerView getView() {
+		return view;
 	}
 }
