@@ -1,7 +1,7 @@
 package fwcd.macromaker;
 
 import fwcd.fructose.swing.PanelFrame;
-import fwcd.macromaker.core.MacroMakerViewController;
+import fwcd.macromaker.ui.MacroMakerViewController;
 
 public class MacroMakerMain {
 	public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package fwcd.macromaker.core;
+package fwcd.macromaker.model;
 
 import java.awt.AWTException;
 import java.awt.Robot;

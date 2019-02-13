@@ -1,4 +1,6 @@
-package fwcd.macromaker.core;
+package fwcd.macromaker.ui;
+
+import fwcd.macromaker.model.Macro;
 
 public class MacroMakerViewController implements MacroMakerResponder {
 	private final MacroMakerView view;

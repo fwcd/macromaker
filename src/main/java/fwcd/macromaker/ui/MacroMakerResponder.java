@@ -1,4 +1,4 @@
-package fwcd.macromaker.core;
+package fwcd.macromaker.ui;
 
 public interface MacroMakerResponder {
 	void record();

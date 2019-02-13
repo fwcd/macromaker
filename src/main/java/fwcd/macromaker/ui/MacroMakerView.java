@@ -1,4 +1,4 @@
-package fwcd.macromaker.core;
+package fwcd.macromaker.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
