@@ -26,7 +26,8 @@ public class MacroMakerViewController implements MacroMakerResponder, AutoClosea
 		view = new MacroMakerView(this);
 		shortcutHandler = new GlobalShortcutsHandler(shortcuts);
 		shortcutHandler.addAction(CommonShortcuts.START_RECORDING, () -> record());
-		shortcutHandler.addAction(CommonShortcuts.STOP_RECORDING, () -> stop());
+		shortcutHandler.addAction(CommonShortcuts.STOP, () -> stop());
+		shortcutHandler.addAction(CommonShortcuts.PLAY, () -> play());
 		shortcutHandler.registerListeners();
 	}
 	

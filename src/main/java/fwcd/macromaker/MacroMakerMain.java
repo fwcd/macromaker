@@ -34,7 +34,8 @@ public class MacroMakerMain {
 		// Setup shortcut model and default shortcuts
 		KeyboardShortcutsModel shortcuts = new KeyboardShortcutsModel();
 		shortcuts.put(CommonShortcuts.START_RECORDING, new KeyboardShortcut("Start recording", "Shift+F8"));
-		shortcuts.put(CommonShortcuts.STOP_RECORDING, new KeyboardShortcut("Stop recording", "Shift+F9"));
+		shortcuts.put(CommonShortcuts.STOP, new KeyboardShortcut("Stop recording", "Shift+F9"));
+		shortcuts.put(CommonShortcuts.PLAY, new KeyboardShortcut("Play", "Shift+F5"));
 		
 		MacroMakerViewController vc = new MacroMakerViewController(shortcuts);
 		PanelFrame frame = new PanelFrame("MacroMaker", 350, 150, vc.getView().getComponent());
