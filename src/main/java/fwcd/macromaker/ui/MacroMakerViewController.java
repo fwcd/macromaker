@@ -17,13 +17,17 @@ public class MacroMakerViewController implements MacroMakerResponder, AutoClosea
 	
 	private RobotProxy robot = new AwtRobotProxy();
 	private MacroRecorder recorder = new MacroRecorder();
-	private GlobalShortcutsHandler shortcutHandler = new GlobalShortcutsHandler();
+	private GlobalShortcutsHandler shortcutHandler;
 	private MacroSerializer serializer = new MacroSerializer();
 	private Macro macro = null;
 	private Thread macroRunner = null;
 	
 	public MacroMakerViewController(KeyboardShortcutsModel shortcuts) {
 		view = new MacroMakerView(this);
+		shortcutHandler = new GlobalShortcutsHandler(shortcuts);
+		shortcutHandler.addAction(CommonShortcuts.START_RECORDING, () -> record());
+		shortcutHandler.addAction(CommonShortcuts.STOP_RECORDING, () -> stop());
+		shortcutHandler.registerListeners();
 	}
 	
 	@Override

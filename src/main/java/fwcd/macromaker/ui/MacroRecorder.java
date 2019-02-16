@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyListener;
 import org.jnativehook.keyboard.SwingKeyAdapter;
 import org.jnativehook.mouse.NativeMouseAdapter;
@@ -18,7 +17,6 @@ import org.jnativehook.mouse.NativeMouseWheelAdapter;
 import org.jnativehook.mouse.NativeMouseWheelEvent;
 import org.jnativehook.mouse.NativeMouseWheelListener;
 
-import fwcd.fructose.exception.Rethrow;
 import fwcd.fructose.time.Stopwatch;
 import fwcd.macromaker.model.Macro;
 import fwcd.macromaker.model.action.KeyPressAction;
@@ -114,11 +112,6 @@ public class MacroRecorder implements AutoCloseable {
 		GlobalScreen.addNativeMouseListener(mouseListener);
 		GlobalScreen.addNativeMouseMotionListener(mouseMotionListener);
 		GlobalScreen.addNativeMouseWheelListener(mouseWheelListener);
-		try {
-			GlobalScreen.registerNativeHook();
-		} catch (NativeHookException e) {
-			throw new Rethrow(e);
-		}
 	}
 	
 	public void stopRecording() {
@@ -127,11 +120,6 @@ public class MacroRecorder implements AutoCloseable {
 		GlobalScreen.removeNativeMouseListener(mouseListener);
 		GlobalScreen.removeNativeMouseMotionListener(mouseMotionListener);
 		GlobalScreen.removeNativeMouseWheelListener(mouseWheelListener);
-		try {
-			GlobalScreen.unregisterNativeHook();
-		} catch (NativeHookException e) {
-			throw new Rethrow(e);
-		}
 	}
 	
 	@Override

@@ -13,15 +13,15 @@ public class KeyboardShortcutsModel {
 		return shortcutNames;
 	}
 	
-	public KeyboardShortcut getShortcut(String name) {
+	public KeyboardShortcut get(String name) {
 		return shortcuts.get(name);
 	}
 	
-	public KeyboardShortcut getShortcutByIndex(int index) {
+	public KeyboardShortcut getByIndex(int index) {
 		return shortcuts.get(shortcutNames.get(index));
 	}
 	
-	public void putShortcut(String name, KeyboardShortcut shortcut) {
+	public void put(String name, KeyboardShortcut shortcut) {
 		KeyboardShortcut previous = shortcuts.put(name, shortcut);
 		if (previous == null) {
 			shortcutNames.add(name);
@@ -32,11 +32,11 @@ public class KeyboardShortcutsModel {
 		return shortcuts.size();
 	}
 	
-	public void removeShortcut(String name) {
+	public void remove(String name) {
 		shortcutNames.remove(name);
 	}
 	
-	public void rebindShortcut(String name, String newShortcut) {
-		putShortcut(name, getShortcut(name).reboundTo(newShortcut));
+	public void rebind(String name, String newShortcut) {
+		put(name, get(name).reboundTo(newShortcut));
 	}
 }

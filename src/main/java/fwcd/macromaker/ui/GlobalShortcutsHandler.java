@@ -30,8 +30,9 @@ public class GlobalShortcutsHandler implements AutoCloseable {
 		
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent event) {
+				System.out.println("Pressd");
 				for (String name : model.getShortcutNames()) {
-					if (actions.containsKey(name) && matches(event, model.getShortcut(name))) {
+					if (actions.containsKey(name) && matches(event, model.get(name))) {
 						actions.get(name).run();
 					}
 				}
@@ -50,16 +51,20 @@ public class GlobalShortcutsHandler implements AutoCloseable {
 		};
 	}
 	
-	public void register() {
+	public void addAction(String keybindName, Runnable action) {
+		actions.put(keybindName, action);
+	}
+	
+	public void registerListeners() {
 		GlobalScreen.addNativeKeyListener(listener);
 	}
 	
-	public void unregister() {
+	public void unregisterListeners() {
 		GlobalScreen.removeNativeKeyListener(listener);
 	}
 	
 	@Override
 	public void close() {
-		unregister();
+		unregisterListeners();
 	}
 }

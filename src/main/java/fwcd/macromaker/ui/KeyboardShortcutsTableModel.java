@@ -36,7 +36,7 @@ public class KeyboardShortcutsTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		String name = model.getShortcutNames().get(rowIndex);
-		KeyboardShortcut shortcut = model.getShortcut(name);
+		KeyboardShortcut shortcut = model.get(name);
 		
 		switch (columnIndex) {
 			case NAME_COLUMN: return name;
@@ -51,7 +51,7 @@ public class KeyboardShortcutsTableModel extends AbstractTableModel {
 		String name = model.getShortcutNames().get(rowIndex);
 		
 		if (columnIndex == SHORTCUT_COLUMN) {
-			model.rebindShortcut(name, (String) aValue);
+			model.rebind(name, (String) aValue);
 		}
 	}
 }
