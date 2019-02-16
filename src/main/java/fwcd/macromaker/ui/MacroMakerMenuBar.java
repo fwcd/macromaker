@@ -10,14 +10,18 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import fwcd.fructose.swing.View;
+import fwcd.macromaker.model.shortcuts.KeyboardShortcutsModel;
 
 public class MacroMakerMenuBar implements View {
 	private final JFileChooser fileChooser = new JFileChooser();
 	private final MacroMakerResponder responder;
+	private final KeyboardShortcutsModel shortcuts;
 	private final JMenuBar component;
 	
-	public MacroMakerMenuBar(MacroMakerResponder responder) {
+	public MacroMakerMenuBar(MacroMakerResponder responder, KeyboardShortcutsModel shortcuts) {
 		this.responder = responder;
+		this.shortcuts = shortcuts;
+		
 		component = new JMenuBar();
 		component.add(menuOf("File",
 			menuItemOf("New", () -> responder.newMacro()),
@@ -30,7 +34,7 @@ public class MacroMakerMenuBar implements View {
 	}
 	
 	private void showShortcutsDialog() {
-		KeyboardShortcutsViewController vc = new KeyboardShortcutsViewController();
+		KeyboardShortcutsViewController vc = new KeyboardShortcutsViewController(shortcuts);
 		JOptionPane.showMessageDialog(component, vc.getComponent(), "Keyboard Shortcuts", JOptionPane.PLAIN_MESSAGE);
 	}
 	

@@ -6,6 +6,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import fwcd.fructose.swing.PanelFrame;
 import fwcd.fructose.time.Stopwatch;
+import fwcd.macromaker.model.shortcuts.KeyboardShortcutsModel;
 import fwcd.macromaker.ui.MacroMakerMenuBar;
 import fwcd.macromaker.ui.MacroMakerViewController;
 
@@ -23,9 +24,10 @@ public class MacroMakerMain {
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "MacroMaker");
 		
-		MacroMakerViewController vc = new MacroMakerViewController();
+		KeyboardShortcutsModel shortcuts = new KeyboardShortcutsModel();
+		MacroMakerViewController vc = new MacroMakerViewController(shortcuts);
 		PanelFrame frame = new PanelFrame("MacroMaker", 350, 150, vc.getView().getComponent());
-		frame.setJMenuBar(new MacroMakerMenuBar(vc).getComponent());
+		frame.setJMenuBar(new MacroMakerMenuBar(vc, shortcuts).getComponent());
 		frame.revalidate();
 		frame.setAlwaysOnTop(true);
 		

@@ -10,17 +10,19 @@ import fwcd.macromaker.model.Macro;
 import fwcd.macromaker.model.MacroSerializer;
 import fwcd.macromaker.model.RobotProxy;
 import fwcd.macromaker.model.action.MacroAction;
+import fwcd.macromaker.model.shortcuts.KeyboardShortcutsModel;
 
 public class MacroMakerViewController implements MacroMakerResponder, AutoCloseable {
 	private final MacroMakerView view;
 	
 	private RobotProxy robot = new AwtRobotProxy();
 	private MacroRecorder recorder = new MacroRecorder();
+	private GlobalShortcutsHandler shortcutHandler = new GlobalShortcutsHandler();
 	private MacroSerializer serializer = new MacroSerializer();
 	private Macro macro = null;
 	private Thread macroRunner = null;
 	
-	public MacroMakerViewController() {
+	public MacroMakerViewController(KeyboardShortcutsModel shortcuts) {
 		view = new MacroMakerView(this);
 	}
 	
@@ -121,5 +123,6 @@ public class MacroMakerViewController implements MacroMakerResponder, AutoClosea
 	@Override
 	public void close() {
 		recorder.close();
+		shortcutHandler.close();
 	}
 }
