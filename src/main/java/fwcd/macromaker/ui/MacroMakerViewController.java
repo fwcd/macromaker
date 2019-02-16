@@ -11,13 +11,14 @@ import fwcd.macromaker.model.MacroSerializer;
 import fwcd.macromaker.model.RobotProxy;
 import fwcd.macromaker.model.action.MacroAction;
 import fwcd.macromaker.model.shortcuts.KeyboardShortcutsModel;
+import fwcd.macromaker.ui.dispatch.GlobalEventDispatcher;
 
 public class MacroMakerViewController implements MacroMakerResponder, AutoCloseable {
 	private final MacroMakerView view;
 	
+	private GlobalEventDispatcher eventDispatcher = new GlobalEventDispatcher();
 	private RobotProxy robot = new AwtRobotProxy();
 	private MacroRecorder recorder = new MacroRecorder();
-	private GlobalShortcutsHandler shortcutHandler;
 	private MacroSerializer serializer = new MacroSerializer();
 	private Macro macro = null;
 	private Thread macroRunner = null;
@@ -25,17 +26,19 @@ public class MacroMakerViewController implements MacroMakerResponder, AutoClosea
 	
 	public MacroMakerViewController(KeyboardShortcutsModel shortcuts) {
 		view = new MacroMakerView(this);
-		shortcutHandler = new GlobalShortcutsHandler(shortcuts);
+		eventDispatcher.registerListeners();
+		
+		ShortcutsHandler shortcutHandler = new ShortcutsHandler(shortcuts);
 		shortcutHandler.addAction(CommonShortcuts.START_RECORDING, () -> record());
 		shortcutHandler.addAction(CommonShortcuts.STOP, () -> stop());
 		shortcutHandler.addAction(CommonShortcuts.PLAY, () -> play());
-		shortcutHandler.registerListeners();
+		eventDispatcher.addKeyListener(shortcutHandler);
 	}
 	
 	@Override
 	public void record() {
 		recorder.reset();
-		recorder.startRecording();
+		recorder.startRecording(eventDispatcher);
 		view.setStatus("Recording...");
 	}
 	
@@ -44,7 +47,7 @@ public class MacroMakerViewController implements MacroMakerResponder, AutoClosea
 		if (macroRunning) {
 			macroRunning = false;
 		} else if (recorder != null) {
-			recorder.stopRecording();
+			recorder.stopRecording(eventDispatcher);
 			macro = recorder.getRecordedMacro();
 			view.setStatus("Idling...");
 		}
@@ -130,7 +133,6 @@ public class MacroMakerViewController implements MacroMakerResponder, AutoClosea
 	
 	@Override
 	public void close() {
-		recorder.close();
-		shortcutHandler.close();
+		eventDispatcher.close();
 	}
 }

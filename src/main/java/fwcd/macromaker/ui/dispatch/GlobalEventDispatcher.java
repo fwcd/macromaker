@@ -12,7 +12,7 @@ import org.jnativehook.mouse.NativeMouseMotionListener;
 import org.jnativehook.mouse.NativeMouseWheelEvent;
 import org.jnativehook.mouse.NativeMouseWheelListener;
 
-public class GlobalEventDispatcher {
+public class GlobalEventDispatcher implements AutoCloseable {
 	private final List<DispatchMouseListener> mouseListeners = new ArrayList<>();
 	private final List<DispatchMouseMotionListener> mouseMotionListeners = new ArrayList<>();
 	private final List<DispatchMouseWheelListener> mouseWheelListeners = new ArrayList<>();
@@ -97,5 +97,26 @@ public class GlobalEventDispatcher {
 		GlobalScreen.removeNativeMouseListener(nativeMouseListener);
 		GlobalScreen.removeNativeMouseMotionListener(nativeMouseMotionListener);
 		GlobalScreen.removeNativeMouseWheelListener(nativeMouseWheelListener);
+	}
+	
+	public void addKeyListener(DispatchKeyListener keyListener) { keyListeners.add(keyListener); }
+	
+	public void addMouseListener(DispatchMouseListener mouseListener) { mouseListeners.add(mouseListener); }
+	
+	public void addMouseMotionListener(DispatchMouseMotionListener mouseMotionListener) { mouseMotionListeners.add(mouseMotionListener); }
+	
+	public void addMouseWheelListener(DispatchMouseWheelListener mouseWheelListener) { mouseWheelListeners.add(mouseWheelListener); }
+	
+	public void removeKeyListener(DispatchKeyListener keyListener) { keyListeners.remove(keyListener); }
+	
+	public void removeMouseListener(DispatchMouseListener mouseListener) { mouseListeners.remove(mouseListener); }
+	
+	public void removeMouseMotionListener(DispatchMouseMotionListener mouseMotionListener) { mouseMotionListeners.remove(mouseMotionListener); }
+	
+	public void removeMouseWheelListener(DispatchMouseWheelListener mouseWheelListener) { mouseWheelListeners.remove(mouseWheelListener); }
+	
+	@Override
+	public void close() {
+		unregisterListeners();
 	}
 }

@@ -5,17 +5,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jnativehook.GlobalScreen;
-import org.jnativehook.keyboard.NativeKeyListener;
-import org.jnativehook.keyboard.SwingKeyAdapter;
-import org.jnativehook.mouse.NativeMouseAdapter;
 import org.jnativehook.mouse.NativeMouseEvent;
-import org.jnativehook.mouse.NativeMouseListener;
-import org.jnativehook.mouse.NativeMouseMotionAdapter;
-import org.jnativehook.mouse.NativeMouseMotionListener;
-import org.jnativehook.mouse.NativeMouseWheelAdapter;
 import org.jnativehook.mouse.NativeMouseWheelEvent;
-import org.jnativehook.mouse.NativeMouseWheelListener;
 
 import fwcd.fructose.time.Stopwatch;
 import fwcd.macromaker.model.Macro;
@@ -27,21 +18,27 @@ import fwcd.macromaker.model.action.MousePressAction;
 import fwcd.macromaker.model.action.MouseReleaseAction;
 import fwcd.macromaker.model.action.MouseScrollAction;
 import fwcd.macromaker.model.action.TimedAction;
+import fwcd.macromaker.ui.dispatch.DispatchKeyListener;
+import fwcd.macromaker.ui.dispatch.DispatchMouseListener;
+import fwcd.macromaker.ui.dispatch.DispatchMouseMotionListener;
+import fwcd.macromaker.ui.dispatch.DispatchMouseWheelListener;
+import fwcd.macromaker.ui.dispatch.GlobalEventDispatcher;
+import fwcd.macromaker.ui.dispatch.SwingDispatchKeyListener;
 
 /**
  * A facility to record macros using native listeners.
  */
-public class MacroRecorder implements AutoCloseable {
-	private final NativeKeyListener keyListener;
-	private final NativeMouseListener mouseListener;
-	private final NativeMouseMotionListener mouseMotionListener;
-	private final NativeMouseWheelListener mouseWheelListener;
+public class MacroRecorder {
+	private final DispatchKeyListener keyListener;
+	private final DispatchMouseListener mouseListener;
+	private final DispatchMouseMotionListener mouseMotionListener;
+	private final DispatchMouseWheelListener mouseWheelListener;
 	
 	private final List<MacroAction> actions = new ArrayList<>();
 	private final Stopwatch watch = new Stopwatch();
 	
 	public MacroRecorder() {
-		keyListener = new SwingKeyAdapter() {
+		keyListener = new SwingDispatchKeyListener() {
 			private static final long serialVersionUID = 1L;
 			
 			@Override
@@ -58,41 +55,45 @@ public class MacroRecorder implements AutoCloseable {
 				addAction(new KeyReleaseAction(awtKeyCode), millis);
 			}
 		};
-		mouseListener = new NativeMouseAdapter() {
+		mouseListener = new DispatchMouseListener() {
 			@Override
-			public void nativeMouseReleased(NativeMouseEvent nativeEvent) {
+			public boolean mouseReleased(NativeMouseEvent nativeEvent) {
 				final int buttonCombo = InputEvent.getMaskForButton(nativeEvent.getButton());
 				final long millis = watch.getMillis();
 				addAction(new MouseReleaseAction(buttonCombo), millis);
+				return true;
 			}
 			
 			@Override
-			public void nativeMousePressed(NativeMouseEvent nativeEvent) {
+			public boolean mousePressed(NativeMouseEvent nativeEvent) {
 				final int buttonCombo = InputEvent.getMaskForButton(nativeEvent.getButton());
 				final long millis = watch.getMillis();
 				addAction(new MousePressAction(buttonCombo), millis);
+				return true;
 			}
 		};
-		mouseMotionListener = new NativeMouseMotionAdapter() {
+		mouseMotionListener = new DispatchMouseMotionListener() {
 			@Override
-			public void nativeMouseMoved(NativeMouseEvent nativeEvent) {
+			public boolean mouseMoved(NativeMouseEvent nativeEvent) {
 				final int x = nativeEvent.getX();
 				final int y = nativeEvent.getY();
 				final long millis = watch.getMillis();
 				addAction(new MouseMoveAction(x, y), millis);
+				return true;
 			}
 
 			@Override
-			public void nativeMouseDragged(NativeMouseEvent nativeEvent) {
-				nativeMouseMoved(nativeEvent);
+			public boolean mouseDragged(NativeMouseEvent nativeEvent) {
+				return mouseMoved(nativeEvent);
 			}
 		};
-		mouseWheelListener = new NativeMouseWheelAdapter() {
+		mouseWheelListener = new DispatchMouseWheelListener() {
 			@Override
-			public void nativeMouseWheelMoved(NativeMouseWheelEvent nativeEvent) {
+			public boolean mouseWheelMoved(NativeMouseWheelEvent nativeEvent) {
 				final int mouseWheelDelta = nativeEvent.getScrollAmount();
 				final long millis = watch.getMillis();
 				addAction(new MouseScrollAction(mouseWheelDelta), millis);
+				return true;
 			}
 		};
 	}
@@ -106,25 +107,20 @@ public class MacroRecorder implements AutoCloseable {
 		actions.add(new TimedAction(action, timeStamp));
 	}
 	
-	public void startRecording() {
+	public void startRecording(GlobalEventDispatcher eventDispatcher) {
 		watch.start();
-		GlobalScreen.addNativeKeyListener(keyListener);
-		GlobalScreen.addNativeMouseListener(mouseListener);
-		GlobalScreen.addNativeMouseMotionListener(mouseMotionListener);
-		GlobalScreen.addNativeMouseWheelListener(mouseWheelListener);
+		eventDispatcher.addKeyListener(keyListener);
+		eventDispatcher.addMouseListener(mouseListener);
+		eventDispatcher.addMouseMotionListener(mouseMotionListener);
+		eventDispatcher.addMouseWheelListener(mouseWheelListener);
 	}
 	
-	public void stopRecording() {
+	public void stopRecording(GlobalEventDispatcher eventDispatcher) {
 		watch.stop();
-		GlobalScreen.removeNativeKeyListener(keyListener);
-		GlobalScreen.removeNativeMouseListener(mouseListener);
-		GlobalScreen.removeNativeMouseMotionListener(mouseMotionListener);
-		GlobalScreen.removeNativeMouseWheelListener(mouseWheelListener);
-	}
-	
-	@Override
-	public void close() {
-		stopRecording();
+		eventDispatcher.removeKeyListener(keyListener);
+		eventDispatcher.removeMouseListener(mouseListener);
+		eventDispatcher.removeMouseMotionListener(mouseMotionListener);
+		eventDispatcher.removeMouseWheelListener(mouseWheelListener);
 	}
 	
 	public Macro getRecordedMacro() {
