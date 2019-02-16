@@ -7,6 +7,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import fwcd.fructose.swing.View;
 
@@ -23,6 +24,14 @@ public class MacroMakerMenuBar implements View {
 			menuItemOf("Open", () -> showOpenDialog()),
 			menuItemOf("Save", () -> showSaveDialog())
 		));
+		component.add(menuOf("Edit",
+			menuItemOf("Keyboard Shortcuts", () -> showShortcutsDialog())
+		));
+	}
+	
+	private void showShortcutsDialog() {
+		KeyboardShortcutsViewController vc = new KeyboardShortcutsViewController();
+		JOptionPane.showMessageDialog(component, vc.getComponent(), "Keyboard Shortcuts", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	private void showOpenDialog() {
