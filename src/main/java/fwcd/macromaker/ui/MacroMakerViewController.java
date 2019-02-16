@@ -21,6 +21,7 @@ public class MacroMakerViewController implements MacroMakerResponder, AutoClosea
 	private MacroSerializer serializer = new MacroSerializer();
 	private Macro macro = null;
 	private Thread macroRunner = null;
+	private boolean macroRunning = false;
 	
 	public MacroMakerViewController(KeyboardShortcutsModel shortcuts) {
 		view = new MacroMakerView(this);
@@ -40,8 +41,8 @@ public class MacroMakerViewController implements MacroMakerResponder, AutoClosea
 	
 	@Override
 	public void stop() {
-		if (macroRunner != null && macroRunner.isAlive()) {
-			macroRunner.interrupt();
+		if (macroRunning) {
+			macroRunning = false;
 		} else if (recorder != null) {
 			recorder.stopRecording();
 			macro = recorder.getRecordedMacro();
@@ -54,12 +55,13 @@ public class MacroMakerViewController implements MacroMakerResponder, AutoClosea
 		if (macro == null) {
 			view.showMessage("No macro recorded.");
 		} else {
+			macroRunning = true;
 			view.setStatus("Playing...");
 			final int repeats = view.getRepeats();
 			
 			macroRunner = new Thread(() -> {
 				int i = 0;
-				while (i < repeats && !Thread.interrupted()) {
+				while (i < repeats && macroRunning) {
 					try {
 						runMacroWithProgress();
 						i++;
@@ -68,6 +70,7 @@ public class MacroMakerViewController implements MacroMakerResponder, AutoClosea
 					}
 				}
 				view.setStatus("Idling...");
+				macroRunning = false;
 			});
 			macroRunner.start();
 		}
