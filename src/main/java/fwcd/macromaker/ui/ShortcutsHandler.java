@@ -11,6 +11,10 @@ import fwcd.macromaker.model.shortcuts.KeyboardShortcut;
 import fwcd.macromaker.model.shortcuts.KeyboardShortcutsModel;
 import fwcd.macromaker.ui.dispatch.DispatchKeyListener;
 
+/**
+ * Maps shortcut names (such as "control.play", commonly
+ * defined in {@code CommonShortcuts}) to runnable actions.
+ */
 public class ShortcutsHandler implements DispatchKeyListener {
 	private final Map<String, Runnable> actions = new HashMap<>();
 	private final KeyboardShortcutsModel model;

@@ -5,6 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A list of shortcut mappings. Note that this class only
+ * maps shortcut names (such as "control.play", commonly
+ * defined in {@code CommonShortcuts}) to key combinations.
+ * It does not define what actions should be run when the
+ * user presses a registered combination, see {@code ShortcutsHandler}
+ * for that functionality.
+ */
 public class KeyboardShortcutsModel {
 	private Map<String, KeyboardShortcut> shortcuts = new HashMap<>();
 	private List<String> shortcutNames = new ArrayList<>();
