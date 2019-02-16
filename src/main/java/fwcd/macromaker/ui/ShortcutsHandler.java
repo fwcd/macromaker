@@ -35,7 +35,7 @@ public class ShortcutsHandler implements DispatchKeyListener {
 	
 	private boolean matches(NativeKeyEvent event, KeyboardShortcut shortcut) {
 		String raw = shortcut.getShortcut().toLowerCase();
-		String actualKey = raw.replaceFirst("(?:(?:ctrl|meta|shift|alt)\\+)?\\s*", "");
+		String actualKey = raw.replaceFirst("(?:(?:ctrl|meta|shift|alt)\\+)*\\s*", "");
 		int modifiers = event.getModifiers();
 		return implies(raw.contains("ctrl"), (modifiers & NativeKeyEvent.CTRL_MASK) != 0)
 			&& implies(raw.contains("meta"), (modifiers & NativeKeyEvent.META_MASK) != 0)
