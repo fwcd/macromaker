@@ -47,6 +47,11 @@ public class KeyboardShortcutsTableModel extends AbstractTableModel {
 	}
 	
 	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return columnIndex == SHORTCUT_COLUMN;
+	}
+	
+	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		String name = model.getShortcutNames().get(rowIndex);
 		

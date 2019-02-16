@@ -9,7 +9,7 @@ public class KeyboardShortcutsViewController {
 	private final JTable component;
 	
 	public KeyboardShortcutsViewController(KeyboardShortcutsModel model) {
-		component = new JTable();
+		component = new JTable(new KeyboardShortcutsTableModel(model));
 	}
 	
 	public JComponent getComponent() {
