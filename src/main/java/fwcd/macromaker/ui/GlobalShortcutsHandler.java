@@ -15,6 +15,7 @@ import fwcd.macromaker.model.shortcuts.KeyboardShortcutsModel;
 public class GlobalShortcutsHandler implements AutoCloseable {
 	private final NativeKeyListener listener;
 	private final Map<String, Runnable> actions = new HashMap<>();
+	private boolean enabled = false;
 	
 	public GlobalShortcutsHandler(KeyboardShortcutsModel model) {
 		listener = new NativeKeyListener() {
@@ -30,9 +31,11 @@ public class GlobalShortcutsHandler implements AutoCloseable {
 		
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent event) {
-				for (String name : model.getShortcutNames()) {
-					if (actions.containsKey(name) && matches(event, model.get(name))) {
-						actions.get(name).run();
+				if (enabled) {
+					for (String name : model.getShortcutNames()) {
+						if (actions.containsKey(name) && matches(event, model.get(name))) {
+							actions.get(name).run();
+						}
 					}
 				}
 			}
@@ -48,6 +51,14 @@ public class GlobalShortcutsHandler implements AutoCloseable {
 					&& actualKey.equals(NativeKeyEvent.getKeyText(event.getKeyCode()).toLowerCase());
 			}
 		};
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 	
 	public void addAction(String keybindName, Runnable action) {
