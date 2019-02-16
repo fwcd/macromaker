@@ -30,7 +30,6 @@ public class GlobalShortcutsHandler implements AutoCloseable {
 		
 			@Override
 			public void nativeKeyPressed(NativeKeyEvent event) {
-				System.out.println("Pressd");
 				for (String name : model.getShortcutNames()) {
 					if (actions.containsKey(name) && matches(event, model.get(name))) {
 						actions.get(name).run();
@@ -40,7 +39,7 @@ public class GlobalShortcutsHandler implements AutoCloseable {
 			
 			private boolean matches(NativeKeyEvent event, KeyboardShortcut shortcut) {
 				String raw = shortcut.getShortcut().toLowerCase();
-				String actualKey = raw.replaceFirst("(?:(?:ctrl|meta|shift|alt)+)?\\s*", "");
+				String actualKey = raw.replaceFirst("(?:(?:ctrl|meta|shift|alt)\\+)?\\s*", "");
 				int modifiers = event.getModifiers();
 				return implies(raw.contains("ctrl"), (modifiers & NativeKeyEvent.CTRL_MASK) != 0)
 					&& implies(raw.contains("meta"), (modifiers & NativeKeyEvent.META_MASK) != 0)
