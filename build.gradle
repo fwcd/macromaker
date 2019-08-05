@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.fwcd:Fructose:e6d5a37d597d448e4823d751fcd90155cc95bc4f'
+    implementation 'com.github.fwcd:Fructose:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
